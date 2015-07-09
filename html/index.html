@@ -89,7 +89,7 @@
         </div>
 
         <script>
-          var states = [ 
+          var dept = [ 
             "01-Ain", "02-Aisne", "03-Allier", "04-Alpes-de-Haute-Provence",
             "05-Hautes-Alpes", "06-Alpes-Maritimes", "07-Ardèche", "08-Ardennes",
             "09-Ariège", "10-Aube", "11-Aude", "12-Aveyron", "13-Bouches-du-Rhône",
@@ -116,7 +116,7 @@
             "972-Martinique", "973-Guyane", "974-La Réunion", "976-Mayotte"
           ];
 
-          var normalizeStateName = function(s) {
+          var normalizeDeptName = function(s) {
               return s.replace(' ', '-')
                   .replace("'", '-')
                   .replace('é', 'e')
@@ -124,13 +124,13 @@
                   .replace('ô', 'o');
           }
 
-          states.forEach(function(state) {
+          dept.forEach(function(d) {
             document.write(
                     '<div class="col s4">' +
                       '<ul class="collapsible orange lighten-2" data-collapsible="accordion"  style="display:none" ' + 
-                        'id="' + normalizeStateName(state) + '">' +
+                        'id="' + normalizeDeptName(d) + '">' +
                         '<li class="white-text">' +
-                          '<div class="collapsible-header orange lighten-2"><h5>' + state + '</h5></div>' +
+                          '<div class="collapsible-header orange lighten-2"><h5>' + d + '</h5></div>' +
                         '</li>' +
                       '</ul>' +
                     '</div>');
@@ -293,7 +293,7 @@
 
         allFireworks.forEach(function(aFirework) {
           var firework = aFirework.data();
-          $('#' + firework.departement.replace(' ', '-'))
+          $('#' + normalizeDeptName(firework.departement))
                   .append('<li>' +
                             '<div class="collapsible-header">' +
                               firework.city +
@@ -307,9 +307,9 @@
 
         $('#spinner').hide();
 
-        states.forEach(function(state) {
-          var stateElem = $('#' + normalizeStateName(state));
-          if (stateElem.children().length > 1) stateElem.show();
+        dept.forEach(function(d) {
+          var deptElem = $('#' + normalizeDeptName(d));
+          if (deptElem.children().length > 1) deptElem.show();
         });
 
         $('.collapsible').collapsible({
