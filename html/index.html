@@ -116,10 +116,19 @@
             "972-Martinique", "973-Guyane", "974-La Réunion", "976-Mayotte"
           ];
 
+          var normalizeStateName = function(s) {
+              return s.replace(' ', '-')
+                  .replace("'", '-')
+                  .replace('é', 'e')
+                  .replace('è', 'e')
+                  .replace('ô', 'o');
+          }
+
           states.forEach(function(state) {
             document.write(
                     '<div class="col s4">' +
-                      '<ul class="collapsible orange lighten-2" data-collapsible="accordion"  style="display:none" id="' + state.replace(' ', '-') + '">' +
+                      '<ul class="collapsible orange lighten-2" data-collapsible="accordion"  style="display:none" ' + 
+                        'id="' + normalizeStateName(state) + '">' +
                         '<li class="white-text">' +
                           '<div class="collapsible-header orange lighten-2"><h5>' + state + '</h5></div>' +
                         '</li>' +
@@ -277,24 +286,22 @@
   <script>
     $( document ).ready(function() {
 
-      var api = restful('fireworks.apispark.net').prefixUrl('v1').protocol('https');
+      var api = restful('feu-d-artifice-14-juillet.apispark.net').prefixUrl('v1').protocol('https');
 
-      var towns = api.all('towns').getAll().then(function(response) {
-        var allTowns = response.body();
+      var fireworks = api.all('fireworks').getAll().then(function(response) {
+        var allFireworks = response.body();
 
-        allTowns.forEach(function(town) {
-          var townData = town.data();
-          $('#' + townData.fullUsState.replace(' ', '-'))
+        allFireworks.forEach(function(aFirework) {
+          var firework = aFirework.data();
+          $('#' + firework.departement.replace(' ', '-'))
                   .append('<li>' +
                             '<div class="collapsible-header">' +
-                              townData.city +
+                              firework.city +
                             '</div>' +
                             '<div class="collapsible-body popout orange lighten-5"><p>' +
-                              '<b>' + townData.date + ' &mdash; ' + townData.time + '</b> ' +
-                                (townData.duration == 0 ? '' : '(' + townData.duration + ' min)') + '<br/>' +
-                              '<b>Event:</b> ' + townData.location +
-                              (townData.price !== undefined ? ' (' + townData.price + ')' : '') + '<br/>' +
-                              (townData.bestSpot !== undefined ? '<b>Best spot: </b> ' + townData.bestSpot  : '') +
+                              '<b>' + firework.day + ' ' + firework.month + ' &mdash; ' + firework.time + '</b> ' +
+                              '<b>Event:</b> ' + firework.location + '<br/>' +
+                              (firework.location !== undefined ? '<b>Best spot: </b> ' + firework.location  : '') +
                             '</p></div>' +
                           '</li>');
         });
@@ -302,7 +309,8 @@
         $('#spinner').hide();
 
         states.forEach(function(state) {
-          var stateElem = $('#' + state.replace(' ', '-'));
+          var stateElem = $('#' + normalizeStateName(state));
+          console.log(state);
           console.log(stateElem.children().length);
           if (stateElem.children().length > 1) stateElem.show();
         });
