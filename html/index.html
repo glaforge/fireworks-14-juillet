@@ -99,7 +99,7 @@
             "25-Doubs", "26-Drôme", "27-Eure", "28-Eure-et-Loir", "29-Finistère",
             "30-Gard", "31-Haute-Garonne", "32-Gers", "33-Gironde", "34-Hérault",
             "35-Ille-et-Vilaine", "36-Indre", "37-Indre-et-Loire", "38-Isère",
-            "39-Jura", "40-Landes", "41-Loir-et-Cher",, "42-Loire", "43-Haute-Loire",
+            "39-Jura", "40-Landes", "41-Loir-et-Cher", "42-Loire", "43-Haute-Loire",
             "44-Loire-Atlantique", "45-Loiret", "46-Lot", "47-Lot-et-Garonne",
             "48-Lozère", "49-Maine-et-Loire", "50-Manche", "51-Marne",
             "52-Haute-Marne", "53-Mayenne", "54-Meurthe-et-Moselle", "55-Meuse",
@@ -117,12 +117,16 @@
           ];
 
           var normalizeDeptName = function(s) {
-              return s.replace(' ', '-')
-                  .replace("'", '-')
-                  .replace('é', 'e')
-                  .replace('è', 'e')
-                  .replace('ô', 'o');
-          }
+            return s.replace(' ', '-')
+                    .replace("'", '-')
+                    .replace('é', 'e')
+                    .replace('è', 'e')
+                    .replace('ô', 'o');
+          };
+
+          var expandDeptName = function(s) {
+            return s.replace(/(\d+[a-z]?)-((.| |'|-)*)/gmi, "$1. $2");
+          };
 
           dept.forEach(function(d) {
             document.write(
@@ -130,7 +134,7 @@
                       '<ul class="collapsible orange lighten-2" data-collapsible="accordion"  style="display:none" ' + 
                         'id="' + normalizeDeptName(d) + '">' +
                         '<li class="white-text">' +
-                          '<div class="collapsible-header orange lighten-2"><h5>' + d + '</h5></div>' +
+                          '<div class="collapsible-header orange lighten-2"><h5>' + expandDeptName(d) + '</h5></div>' +
                         '</li>' +
                       '</ul>' +
                     '</div>');
