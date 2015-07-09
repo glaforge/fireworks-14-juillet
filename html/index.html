@@ -293,16 +293,18 @@
 
         allFireworks.forEach(function(aFirework) {
           var firework = aFirework.data();
+
+          var loc = (firework.location !== null && firework.location !== undefined && firework.location.length > 0 ? firework.location : '')
+                  .replace(/\n/gm, '<br/>');
+          console.log(loc);
+
           $('#' + normalizeDeptName(firework.departement))
                   .append('<li>' +
-                            '<div class="collapsible-header">' +
-                              firework.city +
-                            '</div>' +
+                            '<div class="collapsible-header">' + firework.city + '</div>' +
                             '<div class="collapsible-body popout orange lighten-5"><p>' +
                             '<b>' + firework.day + ' ' + firework.month + ' à ' + firework.time + '</b><br/>' +
-                              firework.location + '<br/>' +
-                            '</p></div>' +
-                          '</li>');
+                            loc + '<br/></p></div>' +
+                  '</li>');
         });
 
         $('#spinner').hide();
