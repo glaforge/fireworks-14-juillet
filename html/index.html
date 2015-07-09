@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
+  <title>Feux d'artifice pour le 14 juillet -- avec APISpark de Restlet</title>
+
+  <!-- CSS  -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="../css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="../css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+              (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-32616835-2', 'auto');
+    ga('send', 'pageview');
+  </script>
+</head>
+<body>
+  <nav class="white" role="navigation">
+    <div class="nav-wrapper container">
+      <a id="logo-container" href="http://restlet.com/" class="brand-logo"><img src="../img/restlet.png" height="30px"></a>
+      <ul class="right hide-on-med-and-down">
+        <li><a href="http://restlet.com/products/restlet-framework"><img src="../img/logo-restlet-framework.png" height="35px" style="position: relative; top: 10px;"></a></li>
+        <li><a href="http://restlet.com/products/apispark"><img src="../img/logo-apispark.png" height="35px" style="position: relative; top: 12px;"></a></li>
+        <li><a href="http://restlet.com/products/restlet-studio"><img src="../img/logo-restlet-studio.png" height="35px" style="position: relative; top: 10px;"></a></li>
+      </ul>
+
+      <ul id="nav-mobile" class="side-nav">
+        <li><a href="https://docs.google.com/forms/d/1ea3ez7jS13Tr13xl0eUoDjKdDHZhG1VFw2MUlEzX3Kk/viewform">Submit a firework</a></li>
+        <li><a href="http://restlet.com">Restlet</a></li>
+        <li><a href="http://restlet.com/products/apispark">APISpark</a></li>
+        <li><a href="http://restlet.com/products/restlet-studio">Restlet Studio</a></li>
+        <li><a href="http://restlet.com/products/restlet-framework">Restlet Framework</a></li>
+      </ul>
+      <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
+    </div>
+  </nav>
+
+  <div id="index-banner" class="parallax-container">
+    <div class="section no-pad-bot">
+      <div class="container">
+        <h1 class="header center white-text text-lighten-2"><b>Feux d'artifice du 14 juillet</b></h1>
+        <div class="row center">
+          <h5 class="header col s12 white-text">
+              Pour la fete nationale, nous avons listé les feux d'artifice dans votre région !<br/>
+              Profitez-en et contribuer ceux que vous connaissez autour de chez vous.
+          </h5>
+        </div>
+        <div class="row center">
+          <a href="#gform" id="submit-firework" class="modal-trigger btn-large waves-effect waves-light teal lighten-1 z-depth-3">Submit a firework</a>
+
+          <!-- Modal Structure -->
+          <div id="gform" class="modal modal-fixed-footer" style="display:none;">
+            <div class="modal-content">
+              <iframe src="https://docs.google.com/forms/d/1ea3ez7jS13Tr13xl0eUoDjKdDHZhG1VFw2MUlEzX3Kk/viewform?embedded=true"
+                      width="660" height="350" frameborder="0" marginheight="0" marginwidth="0">Chargement...</iframe>
+            </div>
+            <div class="modal-footer">
+              <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Close</a>
+            </div>
+          </div>
+        </div>
+        <br><br>
+      </div>
+    </div>
+    <div class="parallax"><img src="../img/background1.jpg" alt="Unsplashed background img 1"></div>
+  </div>
+
+  <div class="container">
+    <div class="section">
+      <div class="row" id="state-container">
+
+        <div id="spinner" class="col s12 center">
+          <div class="preloader-wrapper big active">
+            <div class="spinner-layer spinner-blue">
+              <div class="circle-clipper left">
+                <div class="circle"></div>
+              </div><div class="gap-patch">
+              <div class="circle"></div>
+            </div><div class="circle-clipper right">
+              <div class="circle"></div>
+            </div>
+            </div>
+          </div>
+        </div>
+
+        <script>
+          var states = [ 
+            "01-Ain", "02-Aisne", "03-Allier", "04-Alpes-de-Haute-Provence",
+            "05-Hautes-Alpes", "06-Alpes-Maritimes", "07-Ardèche", "08-Ardennes",
+            "09-Ariège", "10-Aube", "11-Aude", "12-Aveyron", "13-Bouches-du-Rhône",
+            "14-Calvados", "15-Cantal", "16-Charente", "17-Charente-Maritime",
+            "18-Cher", "19-Corrèze", "2A-Corse-du-Sud", "2B-Haute-Corse",
+            "21-Côte-d'Or", "22-Côtes-d'Armor", "23-Creuse", "24-Dordogne",
+            "25-Doubs", "26-Drôme", "27-Eure", "28-Eure-et-Loir", "29-Finistère",
+            "30-Gard", "31-Haute-Garonne", "32-Gers", "33-Gironde", "34-Hérault",
+            "35-Ille-et-Vilaine", "36-Indre", "37-Indre-et-Loire", "38-Isère",
+            "39-Jura", "40-Landes", "41-Loir-et-Cher",, "42-Loire", "43-Haute-Loire",
+            "44-Loire-Atlantique", "45-Loiret", "46-Lot", "47-Lot-et-Garonne",
+            "48-Lozère", "49-Maine-et-Loire", "50-Manche", "51-Marne",
+            "52-Haute-Marne", "53-Mayenne", "54-Meurthe-et-Moselle", "55-Meuse",
+            "56-Morbihan", "57-Moselle", "58-Nièvre", "59-Nord", "60-Oise",
+            "61-Orne", "62-Pas-de-Calais", "63-Puy-de-Dôme", "64-Pyrénées-Atlantiques",
+            "65-Hautes-Pyrénées", "66-Pyrénées-Orientales", "67-Bas-Rhin",
+            "68-Haut-Rhin", "69-Rhône", "70-Haute-Saône", "71-Saône-et-Loire",
+            "72-Sarthe", "73-Savoie", "74-Haute-Savoie", "75-Paris",
+            "76-Seine-Maritime", "77-Seine-et-Marne", "78-Yvelines",
+            "79-Deux-Sèvres", "80-Somme", "81-Tarn", "82-Tarn-et-Garonne", "83-Var",
+            "84-Vaucluse", "85-Vendée", "86-Vienne", "87-Haute-Vienne", "88-Vosges",
+            "89-Yonne", "90-Territoire de Belfort", "91-Essonne", "92-Hauts-de-Seine",
+            "93-Seine-Saint-Denis", "94-Val-de-Marne", "95-Val-d'Oise", "971-Guadeloupe",
+            "972-Martinique", "973-Guyane", "974-La Réunion", "976-Mayotte"
+          ];
+
+          states.forEach(function(state) {
+            document.write(
+                    '<div class="col s4">' +
+                      '<ul class="collapsible orange lighten-2" data-collapsible="accordion"  style="display:none" id="' + state.replace(' ', '-') + '">' +
+                        '<li class="white-text">' +
+                          '<div class="collapsible-header orange lighten-2"><h5>' + state + '</h5></div>' +
+                        '</li>' +
+                      '</ul>' +
+                    '</div>');
+          });
+        </script>
+      </div>
+    </div>
+  </div>
+
+  <div class="parallax-container valign-wrapper">
+    <div class="section no-pad-bot">
+      <div class="container">
+        <div class="row center">
+          <h2 class="header col s12 orange-text light">
+            <b>Hébergez vos APIs alimentées par Google Sheets et ses ressources web dans APISpark</b>
+          </h2>
+        </div>
+      </div>
+    </div>
+    <div class="parallax"><img src="../img/background2.jpg" alt="Unsplashed background img 2"></div>
+  </div>
+
+  <div class="container">
+    <div class="section">
+
+      <div class="row">
+        <div class="col s9 center">
+          <h4>A propos de ce site</h4>
+          <p class="left-align light">
+            Cette liste de feux d'artifice est alimentée par 
+            <a href="http://restlet.com/products/apispark" class="orange-text text-lighten-2">APISpark</a>,
+            la plate-forme d’APIs fournie par <a href="http://restlet.com" class="orange-text text-lighten-2">Restlet</a>.
+          </p>
+          <p class="left-align light">
+            Nous avons listé les feux d'artifice qui ont lieu dans tous les départements, 
+            et nous vous permettons d’en soumettre d'avantage dans votre région.
+          </p>
+          <p class="left-align light">
+            Les données collectées sont hébergées dans un 
+            <a href="http://restlet.com/technical-resources/apispark/tutorials/turn-spreadsheet-to-api" class="orange-text text-lighten-2">Google Sheets wrapper</a>
+            d’APISpark. 
+            Les feux d'artifice que vous soumettez passent par un formulaire Google 
+            qui ajoute des données à notre feuille de calcul. 
+            APISpark est alors responsable d’exposer les données de cette Spreadsheet comme une API Web.
+          </p>
+          <p class="left-align light">
+            Toutes les ressources de ce site sont également hébergées par un 
+            <a href="http://restlet.com/technical-resources/apispark/tutorials/github" class="orange-text text-lighten-2">Github file store</a>
+            d’APISpark, servi par notre plate-forme.
+          </p>
+          <p class="left-align light">
+            Le design vient du projet 
+            <a href="http://materializecss.com" class="orange-text text-lighten-2">Materialize</a> 
+            et les images sont réutilisables gratuitement, 
+            provenant de la fondation Wikimedia et StockSnap.
+          </p>
+        </div>
+        <div class="col s3 center">
+          <h4>Nous contacter</h4>
+          <p class="left-align light">
+            Contactez-nous au travers de <a href="http://twitter.com/restlet" class="orange-text text-lighten-2">twitter</a>
+            ou par mail à <a href="mailto:contact@restlet.com" class="orange-text text-lighten-2">email</a> 
+            si vous souhaitez parler de nos produits ou suggérer des améliorations à ce site.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <div class="parallax-container valign-wrapper">
+    <div class="section no-pad-bot">
+      <div class="container">
+        <div class="row center">
+          <h1 class="header center white-text"><b>Bon 14 juillet !</b></h1>
+          <p class="light white-text">
+            <b>Les photos de ce site proviennent de :</b>
+          </p>
+        </div>
+        <div class="row">
+          <div class="col s4">
+            <a class="waves-effect waves-light btn z-depth-3" href="https://stocksnap.io/photo/BCMVII6673">
+              <i class="material-icons left">image</i>
+              Flag and spark
+            </a>
+          </div>
+          <div class="col s4">
+            <a class="waves-effect waves-light btn z-depth-3" href="https://commons.wikimedia.org/wiki/File:370_rsd_fireworks_blue.jpg">
+              <i class="material-icons left">image</i>
+              East River firework
+            </a>
+          </div>
+          <div class="col s4">
+            <a class="waves-effect waves-light btn z-depth-3" href="https://commons.wikimedia.org/wiki/File:Fireworks_DetroitWindsorIntlFreedomFest.jpg">
+              <i class="material-icons left">image</i>
+              Detroit firework
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="parallax"><img src="../img/background3.jpg" alt="Unsplashed background img 3"></div>
+  </div>
+
+  <footer class="page-footer teal">
+    <div class="container">
+      <div class="row">
+        <div class="col l6 s12">
+          <h5 class="white-text">A propos de nous</h5>
+          <p class="grey-text text-lighten-4">
+            <a href="http://restlet.com" class="orange-text text-lighten-3">Restlet</a> connait les APIs.
+            Nous développons et commercialisons des solutions des solutions logicielles 
+            qui aident les développeurs à se connecter aux données et processus 
+            au travers d’une combinaison d’outils open source et en self-service dans le Cloud.
+            La plateforme de management d’APIs de Restlet gère la totalité du cycle de vie 
+            des APIs du design au développement, hébergement et management.
+          </p>
+        </div>
+        <div class="col l3 s12">
+          <h5 class="white-text">Produits</h5>
+          <ul>
+            <li><a class="orange-text text-lighten-3" href="http://restlet.com/products/restlet-framework">Restlet Framework</a></li>
+            <li><a class="orange-text text-lighten-3" href="http://restlet.com/products/apispark">APISpark</a></li>
+            <li><a class="orange-text text-lighten-3" href="http://restlet.com/products/restlet-studio">Restlet Studio</a></li>
+          </ul>
+        </div>
+        <div class="col l3 s12">
+          <h5 class="white-text">Nous suivre</h5>
+          <ul>
+            <li><a class="orange-text text-lighten-3" href="http://restlet.com/">Société</a></li>
+            <li><a class="orange-text text-lighten-3" href="http://restlet.com/blog">Blog</a></li>
+            <li><a class="orange-text text-lighten-3" href="https://twitter.com/restlet">Twitter</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-copyright">
+      <div class="container">
+        Fait avec &hearts; grâce à <a class="orange-text text-lighten-3" href="http://materializecss.com">Materialize</a>,
+        <a class="orange-text text-lighten-3" href="https://github.com/marmelab/restful.js">Restful.js</a>,
+        <a class="orange-text text-lighten-3" href="https://www.google.com/sheets/about/">Google Sheets</a>,
+        et <a class="orange-text text-lighten-3" href="http://restlet.com/products/apispark">APISpark</a>.
+      </div>
+    </div>
+  </footer>
+
+  <!--  Scripts-->
+  <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <script src="../js/materialize.js"></script>
+  <script src="../js/init.js"></script>
+  <script src="../js/restful.min.js"></script>
+  <script>
+    $( document ).ready(function() {
+
+      var api = restful('fireworks.apispark.net').prefixUrl('v1').protocol('https');
+
+      var towns = api.all('towns').getAll().then(function(response) {
+        var allTowns = response.body();
+
+        allTowns.forEach(function(town) {
+          var townData = town.data();
+          $('#' + townData.fullUsState.replace(' ', '-'))
+                  .append('<li>' +
+                            '<div class="collapsible-header">' +
+                              townData.city +
+                            '</div>' +
+                            '<div class="collapsible-body popout orange lighten-5"><p>' +
+                              '<b>' + townData.date + ' &mdash; ' + townData.time + '</b> ' +
+                                (townData.duration == 0 ? '' : '(' + townData.duration + ' min)') + '<br/>' +
+                              '<b>Event:</b> ' + townData.location +
+                              (townData.price !== undefined ? ' (' + townData.price + ')' : '') + '<br/>' +
+                              (townData.bestSpot !== undefined ? '<b>Best spot: </b> ' + townData.bestSpot  : '') +
+                            '</p></div>' +
+                          '</li>');
+        });
+
+        $('#spinner').hide();
+
+        states.forEach(function(state) {
+          var stateElem = $('#' + state.replace(' ', '-'));
+          console.log(stateElem.children().length);
+          if (stateElem.children().length > 1) stateElem.show();
+        });
+
+        $('.collapsible').collapsible({
+          accordion : true
+        });
+
+        $('.modal-trigger').leanModal({
+                  dismissible: true,
+                  opacity: .5,
+                  in_duration: 300,
+                  out_duration: 200,
+                  ready: function() {  },
+                  complete: function() {  }
+                }
+        );
+      });
+    });
+  </script>
+
+  </body>
+</html>
+
