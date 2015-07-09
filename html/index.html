@@ -310,8 +310,6 @@
 
         states.forEach(function(state) {
           var stateElem = $('#' + normalizeStateName(state));
-          console.log(state);
-          console.log(stateElem.children().length);
           if (stateElem.children().length > 1) stateElem.show();
         });
 
