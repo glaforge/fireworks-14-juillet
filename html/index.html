@@ -292,7 +292,7 @@
 
       var api = restful('feu-d-artifice-14-juillet.apispark.net').prefixUrl('v1').protocol('https');
 
-      var fireworks = api.all('fireworks?$size=1000').getAll().then(function(response) {
+      var fireworks = api.all('fireworks?$size=100').getAll().then(function(response) {
         var allFireworks = response.body();
 
         allFireworks.forEach(function(aFirework) {
